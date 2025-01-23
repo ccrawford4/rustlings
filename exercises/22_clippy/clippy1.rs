@@ -6,7 +6,7 @@
 
 fn main() {
     // TODO: Fix the Clippy lint in this line.
-    const PI: f32 = 3.14;
+    const PI: f32 = std::f32::consts::PI;
     let radius: f32 = 5.0;
 
     let area = PI * radius.powi(2);
