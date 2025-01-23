@@ -7,9 +7,8 @@ fn capitalize_first(input: &str) -> String {
     let mut chars = input.chars();
     match chars.next() {
         None => String::new(),
-        Some(first) => first.to_uppercase().to_string(),
-    };
-    String::new()
+        Some(first) => first.to_uppercase().collect::<String>() + chars.as_str(),
+    }
 }
 
 // TODO: Apply the `capitalize_first` function to a slice of string slices.
