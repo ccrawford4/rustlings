@@ -23,19 +23,55 @@ enum IntoColorError {
     IntConversion,
 }
 
+impl Color {
+    fn within_range(val: i16) -> bool {
+        (0..=255).contains(&val)
+    }
+    fn new(red: u8, green: u8, blue: u8) -> Color {
+        Color {
+            red,
+            green,
+            blue
+        }
+    }
+}
+
 // TODO: Tuple implementation.
 // Correct RGB color values must be integers in the 0..=255 range.
 impl TryFrom<(i16, i16, i16)> for Color {
     type Error = IntoColorError;
-
-    fn try_from(tuple: (i16, i16, i16)) -> Result<Self, Self::Error> {}
+    fn try_from(tuple: (i16, i16, i16)) -> Result<Self, Self::Error> {
+        if !Self::within_range(tuple.0) || 
+            !Self::within_range(tuple.1) ||
+            !Self::within_range(tuple.2)
+        {
+            Err(IntoColorError::IntConversion)
+        } else {
+            Ok(
+                Color { 
+                    red: tuple.0 as u8, 
+                    green: tuple.1 as u8, 
+                    blue: tuple.2 as u8 
+                }
+            )
+        }
+    }
 }
 
 // TODO: Array implementation.
 impl TryFrom<[i16; 3]> for Color {
     type Error = IntoColorError;
 
-    fn try_from(arr: [i16; 3]) -> Result<Self, Self::Error> {}
+    fn try_from(arr: [i16; 3]) -> Result<Self, Self::Error> {
+        if Self::within_range(arr[0]) && 
+            Self::within_range(arr[1]) && 
+            Self::within_range(arr[2]) 
+        {
+            Ok(Color::new(arr[0] as u8, arr[1] as u8, arr[2] as u8))
+        } else {
+            Err(IntoColorError::IntConversion)
+        }
+    }
 }
 
 // TODO: Slice implementation.
@@ -43,7 +79,18 @@ impl TryFrom<[i16; 3]> for Color {
 impl TryFrom<&[i16]> for Color {
     type Error = IntoColorError;
 
-    fn try_from(slice: &[i16]) -> Result<Self, Self::Error> {}
+    fn try_from(slice: &[i16]) -> Result<Self, Self::Error> {
+        if slice.len() != 3 {
+            Err(IntoColorError::BadLen)
+        } else if Self::within_range(slice[0]) && 
+                Self::within_range(slice[1]) && 
+                Self::within_range(slice[2]) 
+        {
+            Ok(Color::new(slice[0] as u8, slice[1] as u8, slice[2] as u8))
+        } else {
+                Err(IntoColorError::IntConversion)
+        }
+    }
 }
 
 fn main() {
